@@ -1,0 +1,181 @@
+﻿@model TestApplication.Domain.StudentModels.StudentViewModel
+@using TestApplication.Data.Enums
+@{
+    ViewData["Title"] = "Marksheet";
+}
+
+<link href="~/css/StyleSheet.css" rel="stylesheet" />
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    td {
+        padding: 15px;
+        text-align: center;
+    }
+
+    th {
+        padding: 15px;
+        text-align: left;
+        background-color: gray;
+    }
+</style>
+<p>
+    <a class="btn btn-primary" asp-action="MailMarkSheet" asp-route-id="@Model.Student.StudentId">Send this in Email</a>
+</p>
+<div class="page">
+    <table width="100%">
+        <tr>
+            <th colspan="5">Student Details</th>
+        </tr>
+        <tr>
+            <td colspan="2">Student Name</td>
+            <td colspan="3">@Model.Student.StudentName</td>
+        </tr>
+        <tr>
+            <td colspan="2">Grade</td>
+            <td colspan="3">@Model.Student.Grade</td>
+        </tr>
+        <tr>
+            <td colspan="2">Address</td>
+            <td colspan="3">@Model.Student.Address</td>
+        </tr>
+        <tr>
+            <th colspan="5">Marks Details</th>
+        </tr>
+        <tr style="background-color:#E6E6E6">
+            <td>SN</td>
+            <td>Subject</td>
+            <td>Full Marks</td>
+            <td>Pass Marks</td>
+            <td>Obtained Marks</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>Maths</td>
+            <td>@StaticDataValues.FullMarks</td>
+            <td>@StaticDataValues.PassMarks</td>
+            <td class="subjectTotal">
+                @if (Model.Subject.Maths < StaticDataValues.PassMarks)
+                {
+                    <u>
+                        @Model.Subject.Maths
+                    </u>
+                }
+                else
+                {
+                    @Model.Subject.Maths
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>English</td>
+            <td>@StaticDataValues.FullMarks</td>
+            <td>@StaticDataValues.PassMarks</td>
+            <td class="subjectTotal">
+                @if (Model.Subject.English < StaticDataValues.PassMarks)
+                {
+                    <u>
+                        @Model.Subject.English
+                    </u>
+                }
+                else
+                {
+                    @Model.Subject.English
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Nepali</td>
+            <td>@StaticDataValues.FullMarks</td>
+            <td>@StaticDataValues.PassMarks</td>
+            <td class="subjectTotal">
+                @if (Model.Subject.Nepali < StaticDataValues.PassMarks)
+                {
+                    <u>
+                        @Model.Subject.Nepali
+                    </u>
+                }
+                else
+                {
+                    @Model.Subject.Nepali
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>Social</td>
+            <td>@StaticDataValues.FullMarks</td>
+            <td>@StaticDataValues.PassMarks</td>
+            <td class="subjectTotal">
+                @if (Model.Subject.Social < StaticDataValues.PassMarks)
+                {
+                    <u>
+                        @Model.Subject.Social
+                    </u>
+                }
+                else
+                {
+                    @Model.Subject.Social
+                }
+            </td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Maths</td>
+            <td>@StaticDataValues.FullMarks</td>
+            <td>@StaticDataValues.PassMarks</td>
+
+            @if (Model.Subject.Science < StaticDataValues.PassMarks)
+            {
+                <td class="subjectTotal" style="background-color:#d72727">
+                    <u>
+                        @Model.Subject.Science
+                    </u>
+                </td>
+            }
+            else
+            {
+                <td class="subjectTotal">
+                    @Model.Subject.Science
+                </td>
+            }
+
+        </tr>
+        <tr>
+            <td colspan="2">Grand Total</td>
+            <td>@(StaticDataValues.FullMarks*5)</td>
+            <td>@(StaticDataValues.PassMarks*5)</td>
+            <td id="GrandTotal">@Model.Subject.TotalMarks</td>
+        </tr>
+        <tr>
+            <td colspan="3">Percentage</td>
+            <td id="Percentage">@Model.Subject.Percentage %</td>
+        </tr>
+    </table>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var sum = 0;
+            $('.subjectTotal').each(function () {
+                debugger;
+                sum = sum + parseFloat($(this).text());
+                if (parseFloat($(this).text()) < parseFloat(@StaticDataValues.PassMarks)) {
+                    $("#Percentage").css("background-color", "pink");
+                    $(this).css("background-color", "pink");
+                }
+            });
+            //$("#GrandTotal").text(sum);
+        });
+    </script>
+}

@@ -1,0 +1,96 @@
+﻿@model TestApplication.Domain.StudentModels.StudentViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create Marksheet</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-controller="Marksheet" asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Subject.Grade" class="control-label"></label>
+                <select asp-for="Subject.Grade" asp-items="@Model.GradeList" class="form-control" id="Grade">
+                    <option value="">Select Grade</option>
+                </select>
+                <span asp-validation-for="Student.Grade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.StudentId" class="control-label"></label>
+                <select asp-for="Subject.StudentId" class="form-control" required id="Student">
+                    <option value="">Select Student</option>
+                </select>
+                <span asp-validation-for="Subject.StudentId" class="text-danger"></span>
+            </div>
+            <hr />
+            <h5>Enter Marks details</h5>
+            <div class="form-group">
+                <label asp-for="Subject.Maths" class="control-label"></label>
+                <input asp-for="Subject.Maths" class="form-control" />
+                <span asp-validation-for="Subject.Maths" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.English" class="control-label"></label>
+                <input asp-for="Subject.English" class="form-control" />
+                <span asp-validation-for="Subject.English" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.Nepali" class="control-label"></label>
+                <input asp-for="Subject.Nepali" class="form-control" />
+                <span asp-validation-for="Subject.Nepali" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.Science" class="control-label"></label>
+                <input asp-for="Subject.Science" class="form-control" />
+                <span asp-validation-for="Subject.Science" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.Social" class="control-label"></label>
+                <input asp-for="Subject.Social" class="form-control" />
+                <span asp-validation-for="Subject.Social" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject.Social" class="control-label"></label>
+                <input asp-for="Subject.Social" class="form-control" />
+                <span asp-validation-for="Subject.Social" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Grade').on('change', function () {
+                $.ajax({
+                    url: "/Marksheet/GetStudentsByGrade",
+                    method: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { id: $(this).val() },
+                    success: function (data) {
+                        console.log(data);
+                        debugger;
+                        $("#Student").empty();
+                        $("#Student").append($("<option></option>").val("")
+                            .html("Select Student"));
+                        $.each(data, function (key, value) {
+                            $("#Student").append($("<option></option>").val(value.studentId)
+                                .html(value.studentName));
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+}

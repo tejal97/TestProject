@@ -1,0 +1,102 @@
+﻿@model TestApplication.Domain.Marksheet.MarksheetIndexModel
+
+@{
+    ViewData["Title"] = "Marksheet";
+}
+<p>
+    <a class="btn btn-success" asp-controller="Marksheet" asp-action="Create">Add New Marksheet</a>
+</p>
+<div id="MessageDiv">
+    <h3 style="color:maroon;">@Model.Message</h3>
+</div>
+<h4>Search Marksheet</h4>
+<hr />
+<form asp-action="SearchMarksheet">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <select asp-for="Grade" asp-items="@Model.GradeList" class="form-control">
+                    <option value="">Select Grade</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="form-group">
+                <select asp-for="Student" class="form-control">
+                    <option value="">Select Student</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-secondary" />
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<h4>Search top 3 ranking students</h4>
+<hr />
+<form asp-action="SearchToppers" method="post">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <select asp-for="Grade" asp-items="@Model.GradeList" class="form-control">
+                    <option value="">Select Grade</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-secondary" />
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+<h4>Search Failed students</h4>
+<hr />
+<form asp-action="SearchFailedStudents" method="get">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group">
+                <select asp-for="Grade" asp-items="@Model.GradeList" class="form-control">
+                    <option value="">Select Grade</option>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="form-group">
+                <input type="submit" value="Search" class="btn btn-secondary" />
+            </div>
+        </div>
+    </div>
+</form>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#Grade').on('change', function () {
+                $.ajax({
+                    url: "/Marksheet/GetStudentsByGrade",
+                    method: "GET",
+                    dataType: "json",
+                    async: false,
+                    data: { id: $(this).val() },
+                    success: function (data) {
+                        console.log(data);
+                        debugger;
+                        $("#Student").empty();
+                        $("#Student").append($("<option></option>").val("")
+                            .html("Select Student"));
+                        $.each(data, function (key, value) {
+                            $("#Student").append($("<option></option>").val(value.studentId)
+                                .html(value.studentName));
+                        });
+                    }
+                });
+            });
+            $('#MessageDiv').delay(2000).fadeOut();
+        });
+    </script>
+}

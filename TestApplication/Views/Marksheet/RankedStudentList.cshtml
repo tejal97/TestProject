@@ -1,0 +1,51 @@
+﻿@model IEnumerable<TestApplication.Domain.StudentModels.StudentRankedListModel>
+
+@{
+    ViewData["Title"] = "Index";
+    int sn = 1;
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Rank
+            </th> 
+            <th>
+                Student Name
+            </th>
+            <th>
+                Percentage
+            </th>
+            <th>
+                Total Marks
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderByDescending(item => item.Percentage))
+        {
+            <tr>
+                <td>
+                   @sn
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StudentName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Percentage)
+                </td> 
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalMarks)
+                </td>
+                <td>
+                    <a class="btn btn-outline-danger" asp-action="SearchMarksheet" asp-route-stid="@item.StudentId">View Report Card</a> 
+                </td>
+            </tr>
+            sn++;
+        }
+    </tbody>
+</table>
